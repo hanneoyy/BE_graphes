@@ -109,7 +109,7 @@ public class PathTest {
         assertEquals(10, longLoopPath.size());
     }
 
-    @Test
+	@Test
     public void testIsValid() {
         assertTrue(emptyPath.isValid());
         assertTrue(singleNodePath.isValid());
@@ -117,7 +117,6 @@ public class PathTest {
         assertTrue(longPath.isValid());
         assertTrue(loopPath.isValid());
         assertTrue(longLoopPath.isValid());
-
         assertFalse(invalidPath.isValid());
     }
 
@@ -211,7 +210,7 @@ public class PathTest {
 
         // Not so simple construction
         path = Path.createShortestPathFromNodes(graph,
-                Arrays.asList(new Node[] { nodes[0], nodes[1], nodes[2], nodes[3] }));
+                Arrays.asList(nodes[0], nodes[1], nodes[2], nodes[3]));
         expected = new Arc[] { a2b, b2c, c2d_2 };
         assertEquals(expected.length, path.getArcs().size());
         for (int i = 0; i < expected.length; ++i) {
@@ -239,5 +238,4 @@ public class PathTest {
     public void testCreateShortestPathFromNodesException() {
         Path.createShortestPathFromNodes(graph, Arrays.asList(new Node[] { nodes[1], nodes[0] }));
     }
-
 }

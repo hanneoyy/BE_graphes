@@ -2,6 +2,7 @@ package org.insa.graphs.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -154,6 +155,10 @@ public final class Node implements Comparable<Node> {
     @Override
     public int compareTo(Node other) {
         return Integer.compare(getId(), other.getId());
+    }
+    
+    public Iterator<Arc> iterator() {
+        return Collections.unmodifiableList(this.successors).iterator();
     }
 
 }
