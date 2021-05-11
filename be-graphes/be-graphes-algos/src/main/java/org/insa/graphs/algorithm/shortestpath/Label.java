@@ -4,17 +4,17 @@ import org.insa.graphs.model.Node;
 public class Label implements Comparable<Label> {
 
 	protected float cost;
-	private boolean marked; // vrai si le noeud a été marqué
+	private boolean marked; // true if the node is marked
 	private Node father;
 	private Node node;
-	private boolean inTas; // vrai si le noeud a été mis dans le tas
+	private boolean inPile; // true if the node is in the pile
 		
 	public Label(Node noeud){
 		this.node = noeud;
 		this.marked = false;
 		this.cost = Float.POSITIVE_INFINITY;
 		this.father = null; 
-		this.inTas = false;
+		this.inPile = false;
 	}
 	
 	public Node getNode() {
@@ -29,7 +29,7 @@ public class Label implements Comparable<Label> {
 		return this.cost;
 	}
 	
-	/* Retourne true si le noeud a été marqué */
+	// Returns true if the node has been marked
 	public boolean getMark() {
 		return this.marked;
 	}
@@ -38,9 +38,9 @@ public class Label implements Comparable<Label> {
 		return this.father;
 	}
 	
-	/* Retourne true si le noeud a été mis dans le tas */
-	public boolean getInTas() {
-		return this.inTas;
+	// Returns true if the node has been put in the pile
+	public boolean getInPile() {
+		return this.inPile;
 	}	
 	
 	public void setMark() {
@@ -55,11 +55,11 @@ public class Label implements Comparable<Label> {
 		this.father = father;
 	}
 	
-	public void setInTas() {
-		this.inTas = true;
+	public void setInPile() {
+		this.inPile = true;
 	}
 	
-	/* Compare les Labels selon leur coût */
+	// Compare the Labels according to their cost
 	public int compareTo(Label autre) {
 		int resultat;
 		if (this.getTotalCost() < autre.getTotalCost()) {

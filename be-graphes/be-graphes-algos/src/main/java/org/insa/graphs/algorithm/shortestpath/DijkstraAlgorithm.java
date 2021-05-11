@@ -10,15 +10,14 @@ import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
 import org.insa.graphs.model.Path;
 
-
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
     }
     
-    protected int nbSommetsVisites;
-	protected int nbSommets;
+    protected int nbNodesVisited;
+	protected int nbNodes;
 
     @Override
     protected ShortestPathSolution doRun() {
@@ -29,12 +28,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		Graph graph = data.getGraph();
 		int tailleGraphe = graph.size();
 
-		// Table of Labels 
-		// The labels are placed accordeing to their ID 
+		// Table of Labels, the labels are placed according to their ID 
 		Label tabLabels[] = new Label [tailleGraphe];
 
 		// Heap of labels 
-		BinaryHeap<Label> tas = new BinaryHeap<Label>();
+		BinaryHeap<Label> heap = new BinaryHeap<Label>();
 
 		// Table of predecessors 
 		Arc[] predecessorArcs = new Arc[tailleGraphe];
@@ -43,24 +41,27 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		// Adding the first node 
 		Label deb = newLabel(data.getOrigin(), data);
 		tabLabels[deb.getNode().getId()] = deb;
-		tas.insert(deb);
-		deb.setInTas();
+		heap.insert(deb);
+		deb.setInPile();
 		deb.setCost(0);
 
 		// Notify the observers of the starting node 
 		notifyOriginProcessed(data.getOrigin());
 
 		// While there are still non-marked nodes and destination is not found
-		while(!tas.isEmpty() && !fin){      	
+		while(!heap.isEmpty() && !fin){      	
 
-			Label current= tas.deleteMin();
+			Label current= heap.deleteMin();
+			
 			// Notifying the observers that the node is marked 
 			notifyNodeMarked(current.getNode());
 			current.setMark();
+			
 			// When we have reached the destination, we stop 
 			if (current.getNode() == data.getDestination()) {
 				fin = true;
 			}
+			
 			// Go through the successors of the current node 
 			Iterator<Arc> arc = current.getNode().iterator();
 			while (arc.hasNext()) {
@@ -78,40 +79,44 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 				// If the label doesn't exist, we create it 
 				if (successeurLabel == null) {
+					
 					// We notify the observers that we've reached the node for the first time 
 					notifyNodeReached(arcIter.getDestination());
 					successeurLabel = newLabel(successeur, data);
 					tabLabels[successeurLabel.getNode().getId()] = successeurLabel;
+					
 					// We increase the number of nodes visited for the performance test 
-					this.nbSommetsVisites++;
+					this.nbNodesVisited++;
 				}
 
 				// If the successor is not yet marked
 				if (!successeurLabel.getMark()) {
+					
 					//If we reach a better cost, we update it
-
 					if((successeurLabel.getTotalCost()>(current.getCost()+data.getCost(arcIter)
 						+(successeurLabel.getTotalCost()-successeurLabel.getCost()))) 
 						|| (successeurLabel.getCost()==Float.POSITIVE_INFINITY)){
+						
 						successeurLabel.setCost(current.getCost()+(float)data.getCost(arcIter));
 						successeurLabel.setFather(current.getNode());
+						
 						// If the label is already in the heap, we update its position
-						if(successeurLabel.getInTas()) {
-							tas.remove(successeurLabel);
+						if(successeurLabel.getInPile()) {
+							heap.remove(successeurLabel);
 						}
+
 						// If not we add it to the heap
 						else {
-							successeurLabel.setInTas();
+							successeurLabel.setInPile();
 						}
-						tas.insert(successeurLabel);
+						heap.insert(successeurLabel);
 						predecessorArcs[arcIter.getDestination().getId()] = arcIter;
 					}
 				}
-
 			}
 		}
 
-		// Destination has no predecessor, the solution is infeasible...
+		// Destination has no predecessor, the solution is infeasible
 		if (predecessorArcs[data.getDestination().getId()] == null) {
 			solution = new ShortestPathSolution(data, Status.INFEASIBLE);
 		} else {
@@ -131,7 +136,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			// Reverse the path
 			Collections.reverse(arcs);
 
-			// Create the final solution.
+			// Create the final solution
 			solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
 
 		}
@@ -145,8 +150,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 	}
 	
 	//Returns the number of Nodes visited
-	public int getNbSommetsVisites() {
-		return this.nbSommetsVisites;
+	public int getNbSommetsVisited() {
+		return this.nbNodesVisited;
 	}
 	
 }
