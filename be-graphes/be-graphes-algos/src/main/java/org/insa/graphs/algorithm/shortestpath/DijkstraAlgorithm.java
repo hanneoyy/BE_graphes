@@ -15,9 +15,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
     }
-    
-    protected int nbNodesVisited;
-	protected int nbNodes;
 
     @Override
     protected ShortestPathSolution doRun() {
@@ -74,38 +71,35 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 				Node successeur = arcIter.getDestination();
 
-				// Get the label corresponding to the current node 
-				Label successeurLabel = tabLabels[successeur.getId()];
+				// Get the label corresponding to the current successor node 
+				Label successorLabel = tabLabels[successeur.getId()];
 
 				// If the label doesn't exist, we create it 
-				if (successeurLabel == null) {
+				if (successorLabel == null) {
 					
 					// We notify the observers that we've reached the node for the first time 
 					notifyNodeReached(arcIter.getDestination());
-					successeurLabel = newLabel(successeur, data);
-					tabLabels[successeurLabel.getNode().getId()] = successeurLabel;
-					
-					// We increase the number of nodes visited for the performance test 
-					this.nbNodesVisited++;
+					successorLabel = newLabel(successeur, data);
+					tabLabels[successorLabel.getNode().getId()] = successorLabel;
 				}
 
 				// If the successor is not yet marked
-				if (!successeurLabel.getMark()) {
+				if (!successorLabel.getMark()) {
 					
 					//If we reach a better cost, we update it
-					if(0>(current.getCost()+data.getCost(arcIter)-successeurLabel.getCost())
-						|| (successeurLabel.getCost()==Float.POSITIVE_INFINITY)){
+					if(0>(current.getCost()+data.getCost(arcIter)-successorLabel.getCost())
+						|| (successorLabel.getCost()==Float.POSITIVE_INFINITY)){
 						
-						successeurLabel.setCost(current.getCost()+(float)data.getCost(arcIter));
-						successeurLabel.setFather(current.getNode());
+						successorLabel.setCost(current.getCost()+(float)data.getCost(arcIter));
+						successorLabel.setFather(current.getNode());
 						
 						// If the label is already in the heap, we update its position
-						if(successeurLabel.getInPile()) {
-							heap.remove(successeurLabel);
+						if(successorLabel.getInPile()) {
+							heap.remove(successorLabel);
 						} else { // If not we add it to the heap
-							successeurLabel.setInPile();
+							successorLabel.setInPile();
 						}
-						heap.insert(successeurLabel);
+						heap.insert(successorLabel);
 						predecessorArcs[arcIter.getDestination().getId()] = arcIter;
 					}
 				}
@@ -143,11 +137,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     //Creates and returns the Label corresponding to the Node
 	protected Label newLabel(Node node, ShortestPathData data) {
 		return new Label(node);
-	}
-	
-	//Returns the number of Nodes visited
-	public int getNbSommetsVisited() {
-		return this.nbNodesVisited;
 	}
 	
 }
