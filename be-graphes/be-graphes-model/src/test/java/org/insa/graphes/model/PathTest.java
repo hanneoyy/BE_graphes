@@ -25,7 +25,7 @@ public class PathTest {
     // List of nodes
     private static Node[] nodes;
 
-    // List of arcs in the graph, a2b is the arc from node A (0) to B (1).
+    // List of arcs in the graph, a2b is the arc from node A (0) to B (1)
     @SuppressWarnings("unused")
     private static Arc a2b, a2c, a2e, b2c, c2d_1, c2d_2, c2d_3, c2a, d2a, d2e, e2d;
 
@@ -90,7 +90,6 @@ public class PathTest {
     @Test
     public void testIsEmpty() {
         assertTrue(emptyPath.isEmpty());
-
         assertFalse(singleNodePath.isEmpty());
         assertFalse(shortPath.isEmpty());
         assertFalse(longPath.isEmpty());

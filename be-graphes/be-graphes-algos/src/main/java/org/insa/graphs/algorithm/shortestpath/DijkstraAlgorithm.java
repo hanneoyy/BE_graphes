@@ -51,7 +51,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		// While there are still non-marked nodes and destination is not found
 		while(!heap.isEmpty() && !fin){      	
 
-			Label current= heap.deleteMin();
+			Label current = heap.deleteMin();
 			
 			// Notifying the observers that the node is marked 
 			notifyNodeMarked(current.getNode());
@@ -93,8 +93,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 				if (!successeurLabel.getMark()) {
 					
 					//If we reach a better cost, we update it
-					if((successeurLabel.getTotalCost()>(current.getCost()+data.getCost(arcIter)
-						+(successeurLabel.getTotalCost()-successeurLabel.getCost()))) 
+					if(0>(current.getCost()+data.getCost(arcIter)-successeurLabel.getCost())
 						|| (successeurLabel.getCost()==Float.POSITIVE_INFINITY)){
 						
 						successeurLabel.setCost(current.getCost()+(float)data.getCost(arcIter));
@@ -103,10 +102,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 						// If the label is already in the heap, we update its position
 						if(successeurLabel.getInPile()) {
 							heap.remove(successeurLabel);
-						}
-
-						// If not we add it to the heap
-						else {
+						} else { // If not we add it to the heap
 							successeurLabel.setInPile();
 						}
 						heap.insert(successeurLabel);
@@ -121,7 +117,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			solution = new ShortestPathSolution(data, Status.INFEASIBLE);
 		} else {
 
-			// The destination has been found, notify the observers.
+			// The destination has been found, notify the observers
 			notifyDestinationReached(data.getDestination());
 
 			// Create the path from the array of predecessors...
@@ -138,7 +134,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 			// Create the final solution
 			solution = new ShortestPathSolution(data, Status.OPTIMAL, new Path(graph, arcs));
-
+			
 		}
 
         return solution;
